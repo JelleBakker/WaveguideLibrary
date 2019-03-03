@@ -6,6 +6,7 @@
  */
 
 #include <cmath>
+#include <cassert>
 
 namespace jbaudio
 {
@@ -14,19 +15,26 @@ namespace jbaudio
     class OnePoleZDF
     {
     public:
+        inline OnePoleZDF()
+        {
+            setSampleRate (44100.0f);
+            setFreq (1000.0f);
+        }
         
-        void reset()
+        inline void reset()
         {
             z1_ = 0.0f;
         }
         
-        void setSampleRate (float sr)
+        inline void setSampleRate (float sr)
         {
+            assert (sr > 0.0f);
             sampleRate_ = sr;
         }
         
-        void setFreq (float f)
+        inline void setFreq (float f)
         {
+            assert (f >= 0.0f && f <= sampleRate_ * 0.5f);
             f = std::clamp (f, 0.01f, sampleRate_ - 1.0f); // -1.0f needed?
             f *= pi / sampleRate_;
             f = std::min (f, 0.5f * pi);
@@ -34,7 +42,7 @@ namespace jbaudio
             g_ = f / (1.0f + f);
         }
         
-        float tickLP (float input)
+        inline float tickLP (float input)
         {
             auto a = (input - z1_) * g_;
             auto b = a + z1_;
@@ -42,7 +50,7 @@ namespace jbaudio
             return b;
         }
         
-        float tickHP (float input)
+        inline float tickHP (float input)
         {
             return input - tickLP (input);
         }

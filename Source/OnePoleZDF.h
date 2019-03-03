@@ -28,13 +28,11 @@ namespace jbaudio
         
         inline void setSampleRate (float sr)
         {
-            assert (sr > 0.0f);
             sampleRate_ = sr;
         }
         
         inline void setFreq (float f)
         {
-            assert (f >= 0.0f && f <= sampleRate_ * 0.5f);
             f = std::clamp (f, 0.01f, sampleRate_ - 1.0f); // -1.0f needed?
             f *= pi / sampleRate_;
             f = std::min (f, 0.5f * pi);

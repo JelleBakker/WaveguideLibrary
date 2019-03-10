@@ -54,9 +54,6 @@ public:
         int lower = upper - 1;
         if (lower < 0) lower += size_;
         
-        std::cout << "writeindex: " << writeIndex_ << "\n";
-        std::cout << "lower: " << lower << " upper: " << upper << " fract: " << fract << "\n";
-        
         return (1.0f - fract) * array_ [upper] + fract * array_ [lower];
     }
     

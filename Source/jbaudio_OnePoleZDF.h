@@ -14,7 +14,7 @@ namespace jbaudio
     class OnePoleZDF
     {
     public:
-        inline OnePoleZDF()
+        OnePoleZDF()
         {
             setSampleRate (44100.0f);
             setFreq (1000.0f);

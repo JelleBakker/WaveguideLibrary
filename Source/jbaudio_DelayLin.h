@@ -7,24 +7,13 @@
 
 #pragma once
 
+#include "jbaudio_Maths.h"
+
 #include <array>
 #include <cassert>
 
 namespace jbaudio
 {
-    
-//==============================================================================
-template <int N>
-struct ConstexprPow2f
-{
-    static constexpr int value_ = 2.0f * ConstexprPow2f <N-1>::value_;
-};
-    
-template<>
-struct ConstexprPow2f <0>
-{
-    static constexpr int value_ = 1;
-};
 
 //==============================================================================
 template <int Pow> // 2^Pow

@@ -29,23 +29,25 @@ public:
     
     inline void push (float sample)
     {
-        array_[writeIndex_++] = sample;
-        writeIndex_ &= mask_;
+        array_[writeIndex_--] = sample;
+        if (writeIndex_ == -1)
+            writeIndex_ = size_ - 1;
     }
     
-    inline float get (float samplesDelay) const
+    inline void setDelayLength (float samples)
     {
-        assert (samplesDelay >= 1.0f && samplesDelay <= size_);
+        assert (samples >= 1.0f && samples <= size_);
         
-        float l;
-        const float fract = std::modf (samplesDelay, &l);
+        delayInt_ = (int)samples;
+        delayFract_ = samples - delayInt_;
+    }
+    
+    inline float get() const
+    {
+        const int lower = (writeIndex_ + delayInt_) & mask_;
+        const int upper = (lower + 1) & mask_;
         
-        int upper = writeIndex_ - static_cast <int> (l);
-        if (upper < 0) upper += size_;
-        int lower = upper - 1;
-        if (lower < 0) lower += size_;
-        
-        return (1.0f - fract) * array_ [upper] + fract * array_ [lower];
+        return (1.0f - delayFract_) * array_ [lower] + delayFract_ * array_ [upper];
     }
     
     static constexpr int size_ = ConstexprPow2f <Pow>::value_;
@@ -54,6 +56,9 @@ private:
     std::array <float, size_> array_ {};
     static constexpr int mask_ = size_ - 1;
     int writeIndex_ = 0;
+    
+    int delayInt_ = 1;
+    float delayFract_ = 0.0f;
 };
     
 }

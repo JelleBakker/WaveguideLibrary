@@ -37,12 +37,12 @@ public:
             writeIndex_ = size_ - 1;
     }
     
-    inline void setDelayLenth (float length)
+    inline void setDelayLength (float samples)
     {
-        assert (length >= 1.0f && length <= size_);
+        assert (samples >= 1.0f && samples <= size_);
         
-        apM_ = (int)length;
-        float fract = length - apM_;
+        apM_ = (int)samples;
+        float fract = samples - apM_;
         if (fract < 0.1f) fract += 1.0f; // delta range of [0.1, 1.1]
         apN_ = (1.0f - fract) / (1.0f + fract);
     }

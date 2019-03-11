@@ -43,7 +43,11 @@ public:
         
         apM_ = (int)samples;
         float fract = samples - apM_;
-        if (fract < 0.1f) fract += 1.0f; // delta range of [0.1, 1.1]
+        if (fract < 0.1f)
+        {
+            fract += 1.0f; // delta range of [0.1, 1.1]
+            apM_ -= 1;
+        }
         apN_ = (1.0f - fract) / (1.0f + fract);
     }
     

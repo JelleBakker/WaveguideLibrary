@@ -20,7 +20,6 @@ public:
     OnePoleZDF()
     {
         setSampleRate (44100.0f);
-        setFreq (1000.0f);
     }
     
     inline void reset()
@@ -31,11 +30,13 @@ public:
     inline void setSampleRate (float sr)
     {
         sampleRate_ = sr;
+        setFreq (freq_);
     }
     
     inline void setFreq (float f)
     {
         f = std::clamp (f, 0.01f, sampleRate_ - 1.0f); // -1.0f needed?
+        freq_ = f;
         f *= pi / sampleRate_;
         f = std::min (f, 0.5f * pi);
         f = std::tan (f);
@@ -55,9 +56,21 @@ public:
         return input - tickLP (input);
     }
     
+    inline float getPhaseDelay (float freq)
+    {
+        float im = freq / freq_;
+        float re = 1.0f;
+        float a = 1.0f / (re * re + im * im);
+        im = -im * a;
+        re = re * a;
+        
+        
+    }
+    
 private:
-    float g_ = 0.0f;
-    float sampleRate_ = 44100.0f;
+    float freq_ = 1000.0f;
+    float g_;
+    float sampleRate_;
     
     float z1_ = 0.0f;
 };

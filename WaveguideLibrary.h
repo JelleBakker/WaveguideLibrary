@@ -20,4 +20,6 @@
 
 #pragma once
 
-#include "Source/jbaudio_Include.h"
+#include "Source/jbaudio_OnePoleZDF.h"
+#include "Source/jbaudio_DelayLin.h"
+#include "Source/jbaudio_DCBlock.h"

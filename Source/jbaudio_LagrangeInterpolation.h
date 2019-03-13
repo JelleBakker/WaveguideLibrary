@@ -4,6 +4,8 @@
  Waveguide Library - JB Audio
  
  Description: Lagrange interpolation
+ https://en.wikipedia.org/wiki/Lagrange_polynomial
+ https://ccrma.stanford.edu/~jos/Interpolation/Lagrange_Interpolation.html
  
  */
 
@@ -30,9 +32,9 @@ namespace jbaudio
                     }
                 }
             }
-            float sum = 0.0f;
-            for (auto& s : h)
-                sum += s;
+            float sum = points[0];
+            for (int i = 1; i < N; i++)
+                sum += points[i];
             return sum;
         }
         

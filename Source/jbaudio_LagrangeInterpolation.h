@@ -18,7 +18,7 @@ namespace jbaudio
     public:
         // e.g calculatePoint ({1, 4, 9}, 2.5) returns 2.5 ^ 2 = 6,25
         template <int N>
-        static float calculatePoint (std::array <float, N> points, float p)
+        static inline float calculatePoint (std::array <float, N> points, float p)
         {
             for (int i = 0; i < N; i++)
             {

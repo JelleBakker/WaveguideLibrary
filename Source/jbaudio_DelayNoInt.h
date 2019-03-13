@@ -25,7 +25,7 @@ namespace jbaudio
             assert (powerOfTwo >= 0);
             array_.resize ((int)std::exp2f (powerOfTwo));
             array_.clear();
-            mask_ = array_.size() - 1;
+            mask_ = (int)array_.size() - 1;
         }
         
         inline void clear()
@@ -37,7 +37,7 @@ namespace jbaudio
         {
             array_[writeIndex_--] = sample;
             if (writeIndex_ == -1)
-                writeIndex_ = size_ - 1;
+                writeIndex_ = (int)array_.size() - 1;
         }
         
         inline float get (int samplesDelay) const
@@ -49,7 +49,6 @@ namespace jbaudio
     private:
         std::vector <float> array_;
         int mask_;
-        static constexpr int mask_ = size_ - 1;
         int writeIndex_ = 0;
     };
 }

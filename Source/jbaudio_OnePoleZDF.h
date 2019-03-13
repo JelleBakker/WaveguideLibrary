@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "jbaudio_Maths.h"
 #include <cmath>
 
 namespace jbaudio
@@ -48,6 +49,7 @@ public:
         auto a = (input - z1_) * g_;
         auto b = a + z1_;
         z1_ = a + b;
+        cancelDenormals (z1_);
         return b;
     }
     

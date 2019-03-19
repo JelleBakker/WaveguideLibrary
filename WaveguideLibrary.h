@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "Source/jbaudio_ADSR.h"
 #include "Source/jbaudio_DCBlock.h"
 #include "Source/jbaudio_DelayAP.h"
 #include "Source/jbaudio_DelayLagrange.h"
@@ -28,3 +29,4 @@
 #include "Source/jbaudio_LagrangeInterpolation.h"
 #include "Source/jbaudio_Maths.h"
 #include "Source/jbaudio_OnePoleZDF.h"
+#include "Source/jbaudio_OscSine.h"

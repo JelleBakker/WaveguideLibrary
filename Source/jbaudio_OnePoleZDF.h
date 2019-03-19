@@ -12,8 +12,6 @@
 
 namespace jbaudio
 {
-    
-static constexpr float pi = 3.14159265358979f;
 
 class OnePoleZDF
 {

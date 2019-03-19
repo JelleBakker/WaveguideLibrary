@@ -23,9 +23,9 @@ struct ConstexprPow2f <0>
 };
     
 // Credits to Martijn Zwartjes
-constexpr float cancelDenormals (float f)
+constexpr void cancelDenormals (float& f)
 {
-    return f + 1E-18;
+    f += 1E-18;
 }
     
 };

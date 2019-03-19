@@ -22,6 +22,7 @@
 
 #include "Source/jbaudio_DCBlock.h"
 #include "Source/jbaudio_DelayAP.h"
+#include "Source/jbaudio_DelayLagrange.h"
 #include "Source/jbaudio_DelayLin.h"
 #include "Source/jbaudio_DelayNoInt.h"
 #include "Source/jbaudio_LagrangeInterpolation.h"

@@ -17,20 +17,18 @@ namespace jbaudio
     public:
         ADSR()
         {
+            reset();
             setSampleRate (44100.0f);
             setAttackTime (0.01f);
             setDecayTime (0.05f);
             setSustainLevel (0.7f);
             setReleaseTime (0.1f);
-            reset();
         }
         
         inline void reset()
         {
-            isAttackStage_ = false;
+            stage_ = Stage::Idle;
             value_ = 0.0f;
-            add_ = 0.0f;
-            mult_ = 1.0f;
         }
         
         void setSampleRate (float sr)
@@ -41,7 +39,7 @@ namespace jbaudio
         
         inline void setAttackTime (float seconds)
         {
-            attackNumSamples_ = std::max (1, int (seconds * sampleRate_));
+            attackIncr_ = 1.0f / std::max (1.0f, seconds * sampleRate_);
         }
         
         inline void setDecayTime (float seconds)
@@ -60,40 +58,59 @@ namespace jbaudio
             releaseMult_ = powXGrt0ToY (0.5f, 1.0f / (std::max (1.0f, seconds * sampleRate_)));
         }
         
-        inline void triggerStart (float velocity0to1)
+        inline void triggerGate (float velocity0to1)
         {
             assert (velocity0to1 >= 0.0f && velocity0to1 <= 1.0f);
-            
-            if (velocity0to1 < value_)
+            if (velocity0to1 > 0.0f)
             {
-                enterDecayStage();
+                // start
+                if (value_ > velocity0to1)
+                {
+                    stage_ = Stage::Decay;
+                }
+                else
+                {
+                    stage_ = Stage::Attack;
+                    velocity_ = velocity0to1;
+                }
             }
             else
             {
-                isAttackStage_ = true;
-                mult_ = 1.0f;
-                velocity_ = velocity0to1;
-                add_ = (velocity_ - value_) / attackNumSamples_;
+                // stop
+                stage_ = Stage::Release;
             }
-        }
-        
-        inline void triggerStop()
-        {
-            // enter release stage
-            mult_ = releaseMult_;
-            add_ = 0.0f;
-            isAttackStage_ = false;
         }
         
         inline float tick()
         {
-            value_ *= mult_;
-            value_ += add_;
+            switch (stage_)
+            {
+                case Stage::Attack:
+                    value_ += attackIncr_;
+                    if (value_ >= velocity_)
+                    {
+                        value_ = velocity_;
+                        stage_ = Stage::Decay;
+                    }
+                    break;
+                    
+                case Stage::Decay:
+                    value_ = sustainLevel_ + (value_ - sustainLevel_) * decayMult_;
+                    break;
+                    
+                case Stage::Release:
+                    value_ *= releaseMult_;
+                    if (value_ < 0.0001f)
+                    {
+                        value_ = 0.0f;
+                        stage_ = Stage::Idle;
+                    }
+                    break;
+                    
+                case Stage::Idle:
+                    break;
+            };
             
-            if (isAttackStage_ && value_ >= velocity_)
-                enterDecayStage();
-            
-            cancelDenormals (value_);
             return value_;
         }
         
@@ -101,7 +118,7 @@ namespace jbaudio
         float sampleRate_;
         
         // params
-        int attackNumSamples_;
+        float attackIncr_;
         float decayMult_;
         float sustainLevel_;
         float releaseMult_;
@@ -109,16 +126,13 @@ namespace jbaudio
         // state
         float velocity_;
         float value_;
-        float add_;
-        float mult_;
-        bool isAttackStage_;
-        
-        inline void enterDecayStage()
+        enum class Stage
         {
-            isAttackStage_ = false;
-            mult_ = decayMult_;
-            const float sustainScaled = sustainLevel_ * velocity_;
-            add_ = sustainScaled - (sustainScaled * decayMult_);
-        }
+            Idle,
+            Attack,
+            Decay,
+            Release
+        };
+        Stage stage_;
     };
 }

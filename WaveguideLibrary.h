@@ -26,6 +26,7 @@
 #include "Source/jbaudio_DelayHermite.h"
 #include "Source/jbaudio_DelayLin.h"
 #include "Source/jbaudio_DelayNoInt.h"
+#include "Source/jbaudio_EnvFollower.h"
 #include "Source/jbaudio_HermiteInterpolation.h"
 #include "Source/jbaudio_LagrangeInterpolation.h"
 #include "Source/jbaudio_LogSmoother.h"

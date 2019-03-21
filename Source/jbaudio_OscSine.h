@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "jbaudio_Maths.h"
 
 namespace jbaudio
 {

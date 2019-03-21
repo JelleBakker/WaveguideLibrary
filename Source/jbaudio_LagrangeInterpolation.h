@@ -15,31 +15,29 @@
 
 namespace jbaudio
 {
-    
-class LagrangeInterpolation
-{
-public:
-    // e.g calculatePoint ({1, 4, 9}, 2.5) returns 2.5 ^ 2 = 6,25
-    template <int N>
-    static inline float calculatePoint (std::array <float, N> points, float p)
+    class LagrangeInterpolation
     {
-        for (int i = 0; i < N; i++)
+    public:
+        // e.g calculatePoint ({1, 4, 9}, 2.5) returns 2.5 ^ 2 = 6,25
+        template <int N>
+        static inline float calculatePoint (std::array <float, N> points, float p)
         {
-            for (int j = 0; j < N; j++)
+            for (int i = 0; i < N; i++)
             {
-                if (i != j)
+                for (int j = 0; j < N; j++)
                 {
-                    points[i] *= (p - (j + 1)) / ((i + 1) - (j + 1));
+                    if (i != j)
+                    {
+                        points[i] *= (p - (j + 1)) / ((i + 1) - (j + 1));
+                    }
                 }
             }
+            float sum = points[0];
+            for (int i = 1; i < N; i++)
+                sum += points[i];
+            return sum;
         }
-        float sum = points[0];
-        for (int i = 1; i < N; i++)
-            sum += points[i];
-        return sum;
-    }
-    
-private:
-};
-    
+        
+    private:
+    };
 }

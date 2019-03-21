@@ -10,33 +10,31 @@
 
 namespace jbaudio
 {
-
-class DCBlock
-{
-public:
-    DCBlock()
+    class DCBlock
     {
-        onepole_.setFreq (10.0f);
-    }
-    
-    inline void reset()
-    {
-        onepole_.reset();
-    }
-    
-    inline void setSampleRate (float sr)
-    {
-        onepole_.setSampleRate (sr);
-        onepole_.setFreq (10.0f);
-    }
-    
-    inline float tick (float input)
-    {
-        return onepole_.tickHP (input);
-    }
-    
-private:
-    OnePoleZDF onepole_;
-};
-    
+    public:
+        DCBlock()
+        {
+            onepole_.setFreq (10.0f);
+        }
+        
+        inline void reset()
+        {
+            onepole_.reset();
+        }
+        
+        inline void setSampleRate (float sr)
+        {
+            onepole_.setSampleRate (sr);
+            onepole_.setFreq (10.0f);
+        }
+        
+        inline float tick (float input)
+        {
+            return onepole_.tickHP (input);
+        }
+        
+    private:
+        OnePoleZDF onepole_;
+    };
 }

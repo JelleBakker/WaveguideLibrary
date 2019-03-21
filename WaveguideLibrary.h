@@ -28,6 +28,7 @@
 #include "Source/jbaudio_DelayNoInt.h"
 #include "Source/jbaudio_HermiteInterpolation.h"
 #include "Source/jbaudio_LagrangeInterpolation.h"
+#include "Source/jbaudio_LogSmoother.h"
 #include "Source/jbaudio_Maths.h"
 #include "Source/jbaudio_OnePoleZDF.h"
 #include "Source/jbaudio_OscSine.h"

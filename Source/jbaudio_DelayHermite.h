@@ -23,7 +23,7 @@ namespace jbaudio
         
         inline void clear()
         {
-            array_.clear();
+            std::fill (array_.begin(), array_.end(), 0.0f);
         }
         
         void setSize (int powerOf2)

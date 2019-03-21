@@ -50,7 +50,7 @@ namespace jbaudio
             target_ = t;
             if (force)
                 z1_ = t;
-            coeff_ = target_ > z1_ ? attCoeff_ : relCoeff_;
+            coeff_ = target_ > z1_ ? &attCoeff_ : &relCoeff_;
         }
         
         inline float getTarget() const
@@ -58,14 +58,9 @@ namespace jbaudio
             return target_;
         }
         
-        inline bool isSmoothing() const
-        {
-            return target_ != z1_;
-        }
-        
         inline float tick()
         {
-            z1_ = z1_ + (target_ - z1_) * coeff_;
+            z1_ = z1_ + (target_ - z1_) * (*coeff_);
             cancelDenormals (z1_);
             return z1_;
         }
@@ -78,7 +73,7 @@ namespace jbaudio
         
         float attCoeff_;
         float relCoeff_;
-        float& coeff_ { attCoeff_ };
+        float* coeff_ { &attCoeff_ };
         
         inline float time2Cutoff (float seconds)
         {

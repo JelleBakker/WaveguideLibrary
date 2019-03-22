@@ -25,7 +25,7 @@ namespace jbaudio
         void setMaxSize (int powerOfTwo)
         {
             assert (powerOfTwo >= 0);
-            array_.resize ((int)std::exp2f (powerOfTwo));
+            array_.resize ((size_t)std::exp2f (powerOfTwo));
             clear();
             mask_ = (int)array_.size() - 1;
             writeIndex_ = 0;
@@ -39,9 +39,9 @@ namespace jbaudio
         
         inline void push (float sample)
         {
-            array_[writeIndex_--] = sample;
+            array_[size_t (writeIndex_--)] = sample;
             if (writeIndex_ == -1)
-                writeIndex_ = array_.size() - 1;
+                writeIndex_ = (int)array_.size() - 1;
         }
         
         inline float get (float samplesDelay)
@@ -55,7 +55,7 @@ namespace jbaudio
             }
             const float apN = (1.0f - fract) / (1.0f + fract);
             
-            const float a = array_[(writeIndex_ + apM) & mask_];
+            const float a = array_[size_t ((writeIndex_ + apM) & mask_)];
             
             const float b = apZ1_ * -apN + a;
             const float output = b * apN + apZ1_;

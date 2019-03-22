@@ -63,7 +63,7 @@ namespace jbaudio
             im = -im * a;
             re = re * a;
             // TODO
-            
+            return 0.0f;
         }
         
     private:

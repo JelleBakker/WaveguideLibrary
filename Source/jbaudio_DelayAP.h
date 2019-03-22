@@ -62,7 +62,8 @@ namespace jbaudio
         static constexpr int size_ = ConstexprPow2f <Pow>::value_;
         
     private:
-        std::array <float, size_> array_ {};
+        std::vector <float> array_;
+        
         static constexpr int mask_ = size_ - 1;
         int writeIndex_ = 0;
         

@@ -17,7 +17,10 @@ namespace jbaudio
     class DelayNoInt
     {
     public:
-        DelayNoInt() {}
+        DelayNoInt()
+        {
+            setMaxSize (16);
+        }
         
         // allocate size, call this before using this delay!
         void setMaxSize (int powerOfTwo)

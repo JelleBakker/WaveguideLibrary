@@ -18,7 +18,7 @@ namespace jbaudio
     public:
         DelayHermite()
         {
-            setSize (16);
+            setMaxSize (16);
         }
         
         inline void clear()
@@ -26,11 +26,12 @@ namespace jbaudio
             std::fill (array_.begin(), array_.end(), 0.0f);
         }
         
-        void setSize (int powerOf2)
+        void setMaxSize (int powerOf2)
         {
             int size = std::max ((int)std::exp2f (powerOf2), 4);
             array_.resize (size, 0.0f);
             mask_ = size - 1;
+            writeIndex_ = 0;
         }
         
         inline void push (float sample)

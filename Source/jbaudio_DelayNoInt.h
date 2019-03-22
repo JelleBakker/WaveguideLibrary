@@ -22,13 +22,13 @@ namespace jbaudio
             setMaxSize (16);
         }
         
-        // allocate size, call this before using this delay!
         void setMaxSize (int powerOfTwo)
         {
             assert (powerOfTwo >= 0);
             array_.resize ((int)std::exp2f (powerOfTwo));
             clear();
             mask_ = (int)array_.size() - 1;
+            writeIndex_ = 0;
         }
         
         inline void clear()
@@ -52,6 +52,6 @@ namespace jbaudio
     private:
         std::vector <float> array_;
         int mask_;
-        int writeIndex_ = 0;
+        int writeIndex_;
     };
 }

@@ -8,23 +8,32 @@
 #pragma once
 
 #include "jbaudio_Maths.h"
-
-#include <array>
+#include <vector>
 #include <cassert>
 
 namespace jbaudio
 {
     // https://ccrma.stanford.edu/~jos/pasp/First_Order_Allpass_Interpolation.html
-    //==============================================================================
-    template <int Pow> // 2^Pow
     class DelayAP
     {
     public:
-        DelayAP() {}
+        DelayAP()
+        {
+            setMaxSize (16);
+        }
+        
+        void setMaxSize (int powerOfTwo)
+        {
+            assert (powerOfTwo >= 0);
+            array_.resize ((int)std::exp2f (powerOfTwo));
+            clear();
+            mask_ = (int)array_.size() - 1;
+            writeIndex_ = 0;
+        }
         
         inline void clear()
         {
-            array_.fill (0.0f);
+            std::fill (array_.begin(), array_.end(), 0.0f);
             apZ1_ = 0.0f;
         }
         
@@ -32,43 +41,34 @@ namespace jbaudio
         {
             array_[writeIndex_--] = sample;
             if (writeIndex_ == -1)
-                writeIndex_ = size_ - 1;
+                writeIndex_ = array_.size() - 1;
         }
         
-        inline void setDelayLength (float samples)
+        inline float get (float samplesDelay)
         {
-            assert (samples >= 1.0f && samples <= size_);
-            
-            apM_ = (int)samples;
-            float fract = samples - apM_;
+            int apM = (int)samplesDelay;
+            float fract = samplesDelay - apM;
             if (fract < 0.1f)
             {
                 fract += 1.0f; // delta range of [0.1, 1.1]
-                apM_ -= 1;
+                apM -= 1;
             }
-            apN_ = (1.0f - fract) / (1.0f + fract);
-        }
-        
-        inline float get()
-        {
-            const float a = array_[(writeIndex_ + apM_) & mask_];
+            const float apN = (1.0f - fract) / (1.0f + fract);
             
-            const float b = apZ1_ * -apN_ + a;
-            const float output = b * apN_ + apZ1_;
+            const float a = array_[(writeIndex_ + apM) & mask_];
+            
+            const float b = apZ1_ * -apN + a;
+            const float output = b * apN + apZ1_;
             apZ1_ = b;
             return output;
         }
         
-        static constexpr int size_ = ConstexprPow2f <Pow>::value_;
-        
     private:
         std::vector <float> array_;
         
-        static constexpr int mask_ = size_ - 1;
-        int writeIndex_ = 0;
+        int mask_;
+        int writeIndex_;
         
-        int apM_ = 1;
-        float apN_ = 0.0f;
         float apZ1_ = 0.0f;
     };
 }

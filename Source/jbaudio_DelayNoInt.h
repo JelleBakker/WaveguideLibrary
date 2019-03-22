@@ -24,7 +24,7 @@ namespace jbaudio
         {
             assert (powerOfTwo >= 0);
             array_.resize ((int)std::exp2f (powerOfTwo));
-            array_.clear();
+            clear();
             mask_ = (int)array_.size() - 1;
         }
         

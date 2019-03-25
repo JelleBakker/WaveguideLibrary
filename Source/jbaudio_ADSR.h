@@ -51,6 +51,7 @@ namespace jbaudio
         {
             assert (level0to1 >= 0.0f && level0to1 <= 1.0f);
             sustainLevel_ = level0to1;
+            sustainLevelScaled_ = sustainLevel_ * velocity_;
         }
         
         inline void setReleaseTime (float seconds)
@@ -64,6 +65,7 @@ namespace jbaudio
             if (velocity0to1 > 0.0f)
             {
                 velocity_ = velocity0to1;
+                sustainLevelScaled_ = sustainLevel_ * velocity_;
                 // start
                 if (value_ > velocity0to1)
                     stage_ = Stage::Decay;
@@ -91,7 +93,7 @@ namespace jbaudio
                     break;
                     
                 case Stage::Decay:
-                    value_ = sustainLevel_ * velocity_ + (value_ - sustainLevel_ * velocity_) * decayMult_;
+                    value_ = sustainLevelScaled_ + (value_ - sustainLevelScaled_) * decayMult_;
                     break;
                     
                 case Stage::Release:
@@ -121,6 +123,7 @@ namespace jbaudio
         
         // state
         float velocity_;
+        float sustainLevelScaled_;
         float value_;
         enum class Stage
         {

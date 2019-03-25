@@ -63,16 +63,12 @@ namespace jbaudio
             assert (velocity0to1 >= 0.0f && velocity0to1 <= 1.0f);
             if (velocity0to1 > 0.0f)
             {
+                velocity_ = velocity0to1;
                 // start
                 if (value_ > velocity0to1)
-                {
                     stage_ = Stage::Decay;
-                }
                 else
-                {
                     stage_ = Stage::Attack;
-                    velocity_ = velocity0to1;
-                }
             }
             else
             {
@@ -95,7 +91,7 @@ namespace jbaudio
                     break;
                     
                 case Stage::Decay:
-                    value_ = sustainLevel_ + (value_ - sustainLevel_) * decayMult_;
+                    value_ = sustainLevel_ * velocity_ + (value_ - sustainLevel_ * velocity_) * decayMult_;
                     break;
                     
                 case Stage::Release:

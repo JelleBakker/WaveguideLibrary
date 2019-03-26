@@ -93,8 +93,12 @@ namespace jbaudio
                     break;
                     
                 case Stage::Decay:
-                    value_ = sustainLevelScaled_ + (value_ - sustainLevelScaled_) * decayMult_;
+                {
+                    float diff = (value_ - sustainLevelScaled_);
+                    cancelDenormals (diff);
+                    value_ = sustainLevelScaled_ + diff * decayMult_;
                     break;
+                }
                     
                 case Stage::Release:
                     value_ *= releaseMult_;

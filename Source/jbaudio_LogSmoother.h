@@ -62,8 +62,7 @@ namespace jbaudio
         {
             float diff = target_ - z1_;
             cancelDenormals (diff);
-            z1_ = z1_ + diff * (*coeff_);
-            return z1_;
+            return z1_ = z1_ + diff * (*coeff_);
         }
         
     private:

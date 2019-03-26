@@ -50,9 +50,7 @@ namespace jbaudio
             float a = std::fabsf (input);
             float diff = a - z1_;
             cancelDenormals (diff);
-            
-            z1_ = z1_ + diff * (a > z1_ ? attCoeff_ : relCoeff_);
-            return z1_;
+            return z1_ = z1_ + diff * (a > z1_ ? attCoeff_ : relCoeff_);
         }
         
     private:

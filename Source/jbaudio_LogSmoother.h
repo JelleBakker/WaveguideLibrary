@@ -60,8 +60,9 @@ namespace jbaudio
         
         inline float tick()
         {
-            z1_ = z1_ + (target_ - z1_) * (*coeff_);
-            cancelDenormals (z1_);
+            float diff = target_ - z1_;
+            cancelDenormals (diff);
+            z1_ = z1_ + diff * (*coeff_);
             return z1_;
         }
         

@@ -8,6 +8,7 @@
 #pragma once
 
 #include "jbaudio_HermiteInterpolation.h"
+#include <cmath>
 #include <cassert>
 #include <vector>
 

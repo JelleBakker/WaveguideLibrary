@@ -8,6 +8,7 @@
 #pragma once
 
 #include "jbaudio_Maths.h"
+#include <algorithm>
 #include <cassert>
 
 namespace jbaudio

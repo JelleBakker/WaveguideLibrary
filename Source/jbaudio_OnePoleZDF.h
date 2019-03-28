@@ -90,12 +90,12 @@ namespace jbaudio
         
         inline void reset()
         {
-            
+            onePole_.reset();
         }
         
         inline void setFreq (float f)
         {
-            
+            onePole_.setFreq (f);
         }
         
         inline void setGainDB (float dB)

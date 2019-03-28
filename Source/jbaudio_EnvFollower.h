@@ -48,10 +48,14 @@ namespace jbaudio
         
         inline float tick (float input)
         {
-            float a = std::fabsf (input);
-            float diff = a - z1_;
+            return tickGrt0 (std::fabsf (input));
+        }
+        
+        inline float tickGrt0 (float input)
+        {
+            float diff = input - z1_;
             cancelDenormals (diff);
-            return z1_ = z1_ + diff * (a > z1_ ? attCoeff_ : relCoeff_);
+            return z1_ = z1_ + diff * (input > z1_ ? attCoeff_ : relCoeff_);
         }
         
     private:

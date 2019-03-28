@@ -21,6 +21,7 @@
 #pragma once
 
 #include "Source/jbaudio_ADSR.h"
+#include "Source/jbaudio_Compressor.h"
 #include "Source/jbaudio_DCBlock.h"
 #include "Source/jbaudio_DelayAP.h"
 #include "Source/jbaudio_DelayHermite.h"

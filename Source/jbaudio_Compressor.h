@@ -1,0 +1,132 @@
+/*
+ 
+ Compressor
+ Waveguide Library - JB Audio
+ 
+ */
+
+#pragma once
+
+#include "jbaudio_EnvFollower.h"
+
+namespace jbaudio
+{
+    // Thanks to the great paper "Digital Dynamic Range Compressor Design— A Tutorial and Analysis"
+    class Compressor
+    {
+    public:
+        class Helper
+        {
+        public:
+            static constexpr float calculateOutput (float input, float threshold, float ratio)
+            {
+                if (input <= threshold)
+                    return input;
+                return threshold + (input - threshold) / ratio;
+            }
+            
+            static constexpr float calculateOutput (float input, float threshold, float ratio, float knee)
+            {
+                // no reduction
+                if ((input - threshold) <= -0.5f * knee)
+                    return input;
+                
+                // full reduction
+                if ((input - threshold) >= 0.5f * knee)
+                    return threshold + (input - threshold) / ratio;
+                
+                // knee range
+                // scale input to [0, knee]
+                float a = input - threshold + knee * 0.5f;
+                // quadratic as [0, knee * knee]
+                a *= a;
+                // quadratic as [0, knee * 0.5]
+                a /= 2.0f * knee;
+                
+                return input + (1 / ratio - 1.0f) * a;
+            }
+        };
+        
+        Compressor()
+        {
+            setSampleRate (44100.0f);
+            setThreshold (-10.0f);
+            setRatio (3.0f);
+            setKnee (5.0f);
+            setAttackTime (0.01f);
+            setReleaseTime (0.1f);
+            reset();
+        }
+        
+        inline void reset()
+        {
+            follower_.reset();
+            lastReductionDB_ = 0.0f;
+            lastReductionAmp_ = 1.0f;
+        }
+        
+        void setSampleRate (float sr)
+        {
+            assert (sr > 0);
+            follower_.setSampleRate (sr);
+        }
+        
+        inline void setThreshold (float thresholdDB)
+        {
+            threshold_ = thresholdDB;
+        }
+        
+        inline void setRatio (float r)
+        {
+            ratio_ = r;
+        }
+        
+        inline void setKnee (float kneeDB)
+        {
+            knee_ = kneeDB;
+        }
+        
+        inline void setAttackTime (float seconds)
+        {
+            follower_.setAttackTime (seconds);
+        }
+        
+        inline void setReleaseTime (float seconds)
+        {
+            follower_.setReleaseTime (seconds);
+        }
+        
+        inline float tick (float input)
+        {
+            const float asDB = ampToDecibel (input);
+            
+            const float outDB = Helper::calculateOutput (asDB, threshold_, ratio_, knee_);
+            const float reductionDB = asDB - outDB;
+            
+            lastReductionDB_ = -follower_.tick (reductionDB);
+            lastReductionAmp_ = decibelToAmp (lastReductionDB_);
+            
+            return input * lastReductionAmp_;
+        }
+        
+        inline float getLastReductionDB() const
+        {
+            return lastReductionDB_;
+        }
+        
+        inline float getLastReductionAmp() const
+        {
+            return lastReductionAmp_;
+        }
+        
+    private:
+        EnvFollower follower_;
+        float threshold_;
+        float ratio_;
+        float knee_;
+        
+        float lastReductionDB_;
+        float lastReductionAmp_;
+    };
+}
+

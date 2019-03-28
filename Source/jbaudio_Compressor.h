@@ -98,12 +98,12 @@ namespace jbaudio
         
         inline float tick (float input)
         {
-            const float asDB = ampToDecibel (input);
+            const float asDB = ampToDecibel (std::fabsf (input));
             
             const float outDB = Helper::calculateOutput (asDB, threshold_, ratio_, knee_);
             const float reductionDB = asDB - outDB;
             
-            lastReductionDB_ = -follower_.tick (reductionDB);
+            lastReductionDB_ = -follower_.tickGrt0 (reductionDB);
             lastReductionAmp_ = decibelToAmp (lastReductionDB_);
             
             return input * lastReductionAmp_;

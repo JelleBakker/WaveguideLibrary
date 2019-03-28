@@ -74,4 +74,52 @@ namespace jbaudio
         
         float z1_ = 0.0f;
     };
+    
+    class OnePoleZDFShelf
+    {
+    public:
+        OnePoleZDFShelf()
+        {
+            setGainDB (0.0f);
+        }
+        
+        void setSampleRate (float sr)
+        {
+            onePole_.setSampleRate (sr);
+        }
+        
+        inline void reset()
+        {
+            
+        }
+        
+        inline void setFreq (float f)
+        {
+            
+        }
+        
+        inline void setGainDB (float dB)
+        {
+            setGainAmp (decibelToAmp (dB));
+        }
+        
+        inline void setGainAmp (float g)
+        {
+            gain_ = g - 1.0f;
+        }
+        
+        inline float tickHS (float input)
+        {
+            return input + onePole_.tickHP (input) * gain_;
+        }
+        
+        inline float tickLS (float input)
+        {
+            return input + onePole_.tickLP (input) * gain_;
+        }
+        
+    private:
+        OnePoleZDF onePole_;
+        float gain_;
+    };
 }

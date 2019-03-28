@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <cassert>
 #include <algorithm>
 #include <cmath>
 
@@ -53,8 +54,8 @@ namespace jbaudio
     {
         if (dB <= minDB)
             return 0.0f;
-        static float a = std::log2f (10.0f);
-        return std::exp2f (a * dB * 0.05f); // see powXGrt0toY
+        static float a = std::powf (10.0f, 0.05f); // 1,1220..
+        return std::exp2f (a * dB); // see powXGrt0toY
     }
     
     inline float ampToDecibel (float amp, float minDB = -100.0f)
@@ -62,5 +63,32 @@ namespace jbaudio
         if (amp > 0.0f)
             return std::max (minDB, std::log10f (amp) * 20.0f);
         return minDB;
+    }
+    
+    inline float getRMSAmp (float* data, int num)
+    {
+        assert (num > 0);
+        float sum = 0.0f;
+        for (int i = 0; i < num; i++)
+            sum += data[i] * data[i];
+        return std::sqrtf (sum / num);
+    }
+    
+    inline float getRMSDB (float* data, int num)
+    {
+        return ampToDecibel (getRMSAmp (data, num));
+    }
+    
+    inline float getPeakAmp (float* data, int num)
+    {
+        float max = 0.0f;
+        for (int i = 0; i < num; i++)
+            max = std::max (max, std::fabsf (data[i]));
+        return max;
+    }
+    
+    inline float getPeakDB (float* data, int num)
+    {
+        return ampToDecibel (getPeakAmp (data, num));
     }
 };

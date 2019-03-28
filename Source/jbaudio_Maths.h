@@ -6,6 +6,8 @@
  */
 
 #pragma once
+
+#include <algorithm>
 #include <cmath>
 
 namespace jbaudio
@@ -47,4 +49,18 @@ namespace jbaudio
         return 12.0f * std::log2f (f / 8.1758f);
     }
     
+    inline float decibelToAmp (float dB, float minDB = -100.0f)
+    {
+        if (dB <= minDB)
+            return 0.0f;
+        static float a = std::log2f (10.0f);
+        return std::exp2f (a * dB * 0.05f); // see powXGrt0toY
+    }
+    
+    inline float ampToDecibel (float amp, float minDB = -100.0f)
+    {
+        if (amp > 0.0f)
+            return std::max (minDB, std::log10f (amp) * 20.0f);
+        return minDB;
+    }
 };

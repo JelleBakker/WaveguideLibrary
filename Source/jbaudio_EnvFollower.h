@@ -53,6 +53,7 @@ namespace jbaudio
         
         inline float tickGrt0 (float input)
         {
+            assert (input >= 0.0f);
             float diff = input - z1_;
             cancelDenormals (diff);
             return z1_ = z1_ + diff * (input > z1_ ? attCoeff_ : relCoeff_);

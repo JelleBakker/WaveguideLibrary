@@ -54,8 +54,8 @@ namespace jbaudio
     {
         if (dB <= minDB)
             return 0.0f;
-        static float a = std::powf (10.0f, 0.05f); // 1,1220..
-        return std::exp2f (a * dB); // see powXGrt0toY
+        static float a = std::log2f (10.0f);
+        return std::exp2f (a * dB * 0.05f); // see powXGrt0toY
     }
     
     inline float ampToDecibel (float amp, float minDB = -100.0f)

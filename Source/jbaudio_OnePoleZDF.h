@@ -8,6 +8,7 @@
 #pragma once
 
 #include "jbaudio_Maths.h"
+#include <iostream>
 #include <algorithm>
 #include <cmath>
 
@@ -75,12 +76,12 @@ namespace jbaudio
         float z1_ = 0.0f;
     };
     
-    class OnePoleZDFShelf
+    class OnePoleZDFHighShelf
     {
     public:
-        OnePoleZDFShelf()
+        OnePoleZDFHighShelf()
         {
-            setGainDB (0.0f);
+            setFreqAndGainDB (2000.0f, 0.0f);
         }
         
         void setSampleRate (float sr)
@@ -93,27 +94,57 @@ namespace jbaudio
             onePole_.reset();
         }
         
-        inline void setFreq (float f)
+        inline void setFreqAndGainDB (float f, float dB)
         {
-            onePole_.setFreq (f);
+            setFreqAndGainAmp (f, decibelToAmp (dB));
         }
         
-        inline void setGainDB (float dB)
-        {
-            setGainAmp (decibelToAmp (dB));
-        }
-        
-        inline void setGainAmp (float g)
+        inline void setFreqAndGainAmp (float f, float g)
         {
             gain_ = g - 1.0f;
+            onePole_.setFreq (f * std::sqrtf (g));
         }
-        
-        inline float tickHS (float input)
+
+        inline float tick (float input)
         {
             return input + onePole_.tickHP (input) * gain_;
         }
         
-        inline float tickLS (float input)
+    private:
+        OnePoleZDF onePole_;
+        float gain_;
+    };
+    
+    class OnePoleZDFLowShelf
+    {
+    public:
+        OnePoleZDFLowShelf()
+        {
+            setFreqAndGainDB (2000.0f, 0.0f);
+        }
+        
+        void setSampleRate (float sr)
+        {
+            onePole_.setSampleRate (sr);
+        }
+        
+        inline void reset()
+        {
+            onePole_.reset();
+        }
+        
+        inline void setFreqAndGainDB (float f, float dB)
+        {
+            setFreqAndGainAmp (f, decibelToAmp (dB));
+        }
+        
+        inline void setFreqAndGainAmp (float f, float g)
+        {
+            gain_ = g - 1.0f;
+            onePole_.setFreq (f / std::sqrtf (g));
+        }
+        
+        inline float tick (float input)
         {
             return input + onePole_.tickLP (input) * gain_;
         }

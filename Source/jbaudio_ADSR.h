@@ -16,6 +16,14 @@ namespace jbaudio
     class ADSR
     {
     public:
+        enum class Stage
+        {
+            Idle,
+            Attack,
+            Decay,
+            Release
+        };
+        
         ADSR()
         {
             reset();
@@ -117,6 +125,11 @@ namespace jbaudio
             return value_;
         }
         
+        inline Stage getStage() const
+        {
+            return stage_;
+        }
+        
     private:
         float sampleRate_;
         
@@ -130,13 +143,6 @@ namespace jbaudio
         float velocity_;
         float sustainLevelScaled_;
         float value_;
-        enum class Stage
-        {
-            Idle,
-            Attack,
-            Decay,
-            Release
-        };
         Stage stage_;
     };
 }

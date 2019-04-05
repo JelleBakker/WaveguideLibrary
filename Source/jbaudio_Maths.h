@@ -40,14 +40,16 @@ namespace jbaudio
         return std::exp2f (std::log2f (x) * y);
     }
     
+    static constexpr float c0Freq_ = 8.1757989156f;
+    
     inline float pitchToFreq (float p)
     {
-        return std::exp2f (p / 12.0f) * 8.1758f;
+        return std::exp2f (p / 12.0f) * c0Freq_;
     }
     
     inline float freqToPitch (float f)
     {
-        return 12.0f * std::log2f (f / 8.1758f);
+        return 12.0f * std::log2f (f / c0Freq_);
     }
     
     inline float decibelToAmp (float dB, float minDB = -100.0f)

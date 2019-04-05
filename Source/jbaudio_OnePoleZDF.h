@@ -57,15 +57,20 @@ namespace jbaudio
             return input - tickLP (input);
         }
         
-        inline float getPhaseDelay (float freq)
+        inline float getPhaseDelayLP (float freq)
         {
-            float im = freq / freq_;
-            float re = 1.0f;
-            float a = 1.0f / (re * re + im * im);
-            im = -im * a;
-            re = re * a;
-            // TODO
-            return 0.0f;
+            float a = freq / freq_;
+            float re = 1.0f / (a * a + 1.0f);
+            float im = (a * re);
+            
+            float phase = 0.0f;
+            if (re >= 0.0f && im >= 0.0f)
+            {
+                phase = 0.5f * pi - std::atanf (re / im);
+            }
+            else assert (false);
+            
+            return phase;
         }
         
     private:

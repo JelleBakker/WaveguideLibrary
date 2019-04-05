@@ -93,4 +93,18 @@ namespace jbaudio
     {
         return ampToDecibel (getPeakAmp (data, num));
     }
+    
+    // https://en.wikibooks.org/wiki/Digital_Signal_Processing/Bilinear_Transform
+    inline float bilinearTransformOpt (float f, float piDivSr)
+    {
+        float a = f * piDivSr;
+        assert (a >= 0.0f && a <= 0.5f * pi);
+        return std::tanf (f * piDivSr);
+    }
+    
+    // pi / sr can be calculated once at sr change, then use the opt version
+    inline float bilinearTransform (float f, float sr)
+    {
+        return bilinearTransformOpt (f, pi / sr);
+    }
 };

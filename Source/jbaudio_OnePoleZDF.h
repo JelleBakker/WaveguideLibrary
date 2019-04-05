@@ -8,7 +8,6 @@
 #pragma once
 
 #include "jbaudio_Maths.h"
-#include <iostream>
 #include <algorithm>
 #include <cmath>
 
@@ -35,12 +34,8 @@ namespace jbaudio
         
         inline void setFreq (float f)
         {
-            f = std::clamp (f, 0.01f, sampleRate_ - 1.0f); // -1.0f needed?
-            freq_ = f;
-            f *= pi / sampleRate_;
-            f = std::min (f, 0.5f * pi);
-            f = std::tan (f);
-            g_ = f / (1.0f + f);
+            float a = bilinearTransform (f, sampleRate_);
+            g_ = a / (1.0f + a);
         }
         
         inline float tickLP (float input)

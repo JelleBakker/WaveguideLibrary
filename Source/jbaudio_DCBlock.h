@@ -15,7 +15,7 @@ namespace jbaudio
     public:
         DCBlock()
         {
-            onepole_.setFreq (10.0f);
+            setSampleRate (44100.0f);
         }
         
         inline void reset()
@@ -26,7 +26,7 @@ namespace jbaudio
         inline void setSampleRate (float sr)
         {
             onepole_.setSampleRate (sr);
-            onepole_.setFreq (10.0f);
+            onepole_.setFreq (5.0f);
         }
         
         inline float tick (float input)

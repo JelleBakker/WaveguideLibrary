@@ -17,12 +17,12 @@ namespace jbaudio
     class LogSmoother
     {
     public:
-        LogSmoother()
+        LogSmoother (float initialValue = 0.0f)
         {
             setSampleRate (44100.0f);
             setAttackTime (0.01f);
             setReleaseTime (0.05f);
-            reset();
+            setTarget (initialValue, true);
         }
         
         inline void reset()
@@ -34,6 +34,18 @@ namespace jbaudio
         {
             assert (sr > 0);
             sampleRate_ = sr;
+        }
+        
+        inline void setAttackAndReleaseTime (float seconds)
+        {
+            setAttackTime (seconds);
+            setReleaseTime (seconds);
+        }
+        
+        inline void setAttackAndReleaseTime (float attackS, float releaseS)
+        {
+            setAttackTime (attackS);
+            setReleaseTime (releaseS);
         }
         
         inline void setAttackTime (float attackS)

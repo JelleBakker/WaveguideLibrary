@@ -34,6 +34,7 @@ namespace jbaudio
         
         inline void setFreq (float f)
         {
+            freq_ = f;
             float a = bilinearTransform (f, sampleRate_);
             g_ = a / (1.0f + a);
         }
@@ -56,16 +57,9 @@ namespace jbaudio
         {
             float a = freq / freq_;
             float re = 1.0f / (a * a + 1.0f);
-            float im = (a * re);
+            float im = -(a * re);
             
-            float phase = 0.0f;
-            if (re >= 0.0f && im >= 0.0f)
-            {
-                phase = 0.5f * pi - std::atanf (re / im);
-            }
-            else assert (false);
-            
-            return phase;
+            return std::atan2f (im, re);
         }
         
     private:

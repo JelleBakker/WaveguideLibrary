@@ -17,6 +17,8 @@ namespace jbaudio
     class DelayHermite
     {
     public:
+        static constexpr float minLength_ = 2.0f;
+        
         DelayHermite()
         {
             setMaxSize (16);
@@ -42,9 +44,14 @@ namespace jbaudio
                 writeIndex_ = (int)array_.size() - 1;
         }
         
+        inline float getClipped (float numSamples) const
+        {
+            return get (std::max (minLength_, numSamples));
+        }
+        
         inline float get (float numSamples) const
         {
-            assert (numSamples >= 2.0f);
+            assert (numSamples >= minLength_);
             const int asInt = (int) numSamples;
             const float x = numSamples - asInt;
             const float y0 = array_ [size_t ((writeIndex_ + asInt - 1) & mask_)];
@@ -52,7 +59,7 @@ namespace jbaudio
             const float y2 = array_ [size_t ((writeIndex_ + asInt + 1) & mask_)];
             const float y3 = array_ [size_t ((writeIndex_ + asInt + 2) & mask_)];
             
-            return HermiteInterpolation::calculatePoint (x, y0, y1, y2, y3);
+            return HermiteInterpolation::calculatePointV4 (x, y0, y1, y2, y3);
         }
         
     private:

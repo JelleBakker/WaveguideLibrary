@@ -3,7 +3,7 @@ Physical modelling waveguide library with JUCE module wrapper
 
 Dependencies: C++17 compiler  
   
-MIT License:  
+**MIT License:**  
 Copyright (c) 2019 JB Audio  (jellebakker@jb-audio.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy  

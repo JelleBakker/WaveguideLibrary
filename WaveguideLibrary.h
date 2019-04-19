@@ -36,5 +36,6 @@
 #include "Source/jbaudio_OnePoleZDF.h"
 #include "Source/jbaudio_OscSine.h"
 #include "Source/jbaudio_Tube.h"
+#include "Source/jbaudio_SmootherLin.h"
 #include "Source/jbaudio_SVF.h"
 #include "Source/jbaudio_WaveShaper.h"

@@ -40,6 +40,8 @@
 
 namespace jbaudio
 {
+    // Waveguides can create dc offsets so this object can be used to get rid of the dc offset
+    // It's basically a highpass filter with a very low freq
     class DCBlock
     {
     public:
@@ -56,7 +58,7 @@ namespace jbaudio
         inline void setSampleRate (float sr)
         {
             onepole_.setSampleRate (sr);
-            onepole_.setFreq (5.0f);
+            onepole_.setFreq (10.0f);
         }
         
         inline float tick (float input)

@@ -54,13 +54,13 @@ namespace jbaudio
         void setMaxSize (int powerOfTwo)
         {
             assert (powerOfTwo >= 0);
-            array_.resize ((size_t)std::exp2f (powerOfTwo));
-            clear();
+            array_.resize ((size_t)std::exp2f (powerOfTwo), 0.0f);
+            reset();
             mask_ = (int)array_.size() - 1;
             writeIndex_ = 0;
         }
         
-        inline void clear()
+        inline void reset()
         {
             std::fill (array_.begin(), array_.end(), 0.0f);
         }

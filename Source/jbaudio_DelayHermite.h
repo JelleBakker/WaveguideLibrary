@@ -54,7 +54,7 @@ namespace jbaudio
             setMaxSize (16);
         }
         
-        inline void clear()
+        inline void reset()
         {
             std::fill (array_.begin(), array_.end(), 0.0f);
         }
@@ -63,6 +63,7 @@ namespace jbaudio
         {
             int size = std::max ((int)std::exp2f (powerOf2), 4);
             array_.resize ((size_t)size, 0.0f);
+            reset();
             mask_ = size - 1;
             writeIndex_ = 0;
         }

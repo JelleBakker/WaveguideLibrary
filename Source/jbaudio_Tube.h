@@ -52,7 +52,7 @@ namespace jbaudio
         
         inline void reset()
         {
-            delay_.clear();
+            delay_.reset();
             lowpass_.reset();
             length_.reset();
             cutoff_.reset();

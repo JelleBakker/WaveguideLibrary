@@ -53,6 +53,13 @@ namespace jbaudio
             setMaxSize (16);
         }
         
+        // ================================================================================
+        inline void reset()
+        {
+            std::fill (array_.begin(), array_.end(), 0.0f);
+        }
+        
+        // ================================================================================
         void setMaxSize (int powerOfTwo)
         {
             assert (powerOfTwo >= 0);
@@ -62,11 +69,7 @@ namespace jbaudio
             writeIndex_ = 0;
         }
         
-        inline void reset()
-        {
-            std::fill (array_.begin(), array_.end(), 0.0f);
-        }
-        
+        // ================================================================================
         inline void push (float sample)
         {
             array_[size_t (writeIndex_--)] = sample;
@@ -76,8 +79,29 @@ namespace jbaudio
         
         inline float get (int samplesDelay) const
         {
-            assert (samplesDelay >= 1.0f && samplesDelay <= (int)array_.size());
+            assert (samplesDelay == clampLength (samplesDelay));
             return array_ [size_t ((writeIndex_ + samplesDelay) & mask_)];
+        }
+        
+        inline float getClipped (int samplesDelay) const
+        {
+            return get (clampLength (samplesDelay));
+        }
+        
+        // ================================================================================
+        inline int getMinDelayLengthSamples() const
+        {
+            return 1;
+        }
+        
+        inline int getMaxDelayLengthSamples() const
+        {
+            return (int)array_.size();
+        }
+        
+        inline int clampLength (int samples) const
+        {
+            return std::clamp (samples, getMinDelayLengthSamples(), getMaxDelayLengthSamples());
         }
         
     private:

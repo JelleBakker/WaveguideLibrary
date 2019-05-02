@@ -47,18 +47,18 @@ namespace jbaudio
     class DelayHermite
     {
     public:
-        static constexpr float minLength_ = 2.0f;
-        
         DelayHermite()
         {
             setMaxSize (16);
         }
         
+        // ================================================================================
         inline void reset()
         {
             std::fill (array_.begin(), array_.end(), 0.0f);
         }
         
+        // ================================================================================
         void setMaxSize (int powerOf2)
         {
             int size = std::max ((int)std::exp2f (powerOf2), 4);
@@ -68,6 +68,7 @@ namespace jbaudio
             writeIndex_ = 0;
         }
         
+        // ================================================================================
         inline void push (float sample)
         {
             array_ [size_t (writeIndex_--)] = sample;
@@ -75,22 +76,38 @@ namespace jbaudio
                 writeIndex_ = (int)array_.size() - 1;
         }
         
-        inline float getClipped (float numSamples) const
+        inline float get (float samplesDelay) const
         {
-            return get (std::max (minLength_, numSamples));
-        }
-        
-        inline float get (float numSamples) const
-        {
-            assert (numSamples >= minLength_);
-            const int asInt = (int) numSamples;
-            const float x = numSamples - asInt;
+            assert (samplesDelay == clampLength (samplesDelay));
+            const int asInt = (int) samplesDelay;
+            const float x = samplesDelay - asInt;
             const float y0 = array_ [size_t ((writeIndex_ + asInt - 1) & mask_)];
             const float y1 = array_ [size_t ((writeIndex_ + asInt) & mask_)];
             const float y2 = array_ [size_t ((writeIndex_ + asInt + 1) & mask_)];
             const float y3 = array_ [size_t ((writeIndex_ + asInt + 2) & mask_)];
             
             return HermiteInterpolation::calculatePointV4 (x, y0, y1, y2, y3);
+        }
+        
+        inline float getClipped (float samplesDelay) const
+        {
+            return get (clampLength (samplesDelay));
+        }
+        
+        // ================================================================================
+        inline int getMinDelayLengthSamples() const
+        {
+            return 2;
+        }
+        
+        inline int getMaxDelayLengthSamples() const
+        {
+            return (int)array_.size() - 3;
+        }
+        
+        inline float clampLength (float samplesDelay) const
+        {
+            return std::clamp (samplesDelay, (float)getMinDelayLengthSamples(), (float)getMaxDelayLengthSamples());
         }
         
     private:

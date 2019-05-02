@@ -36,7 +36,8 @@
  */
 
 #pragma once
-#include "jbaudio_OnePoleZDF.h"
+#include "Filters/jbaudio_OnePoleZDF.h"
+#include "Smoothers/jbaudio_LogSmoother.h"
 
 namespace jbaudio
 {

@@ -30,7 +30,7 @@
 
 /*
  
- DelayAP
+ DelayLin
  Waveguide Library - JB Audio
  
  */
@@ -43,15 +43,21 @@
 
 namespace jbaudio
 {
-    // https://ccrma.stanford.edu/~jos/pasp/First_Order_Allpass_Interpolation.html
-    class DelayAP
+    class DelayLin
     {
     public:
-        DelayAP()
+        DelayLin()
         {
             setMaxSize (16);
         }
         
+        // ================================================================================
+        inline void reset()
+        {
+            std::fill (array_.begin(), array_.end(), 0.0f);
+        }
+        
+        // ================================================================================
         void setMaxSize (int powerOfTwo)
         {
             assert (powerOfTwo >= 0);
@@ -61,12 +67,7 @@ namespace jbaudio
             writeIndex_ = 0;
         }
         
-        inline void reset()
-        {
-            std::fill (array_.begin(), array_.end(), 0.0f);
-            apZ1_ = 0.0f;
-        }
-        
+        // ================================================================================
         inline void push (float sample)
         {
             array_[size_t (writeIndex_--)] = sample;
@@ -74,31 +75,43 @@ namespace jbaudio
                 writeIndex_ = (int)array_.size() - 1;
         }
         
-        inline float get (float samplesDelay)
+        inline float get (float samplesDelay) const
         {
-            int apM = (int)samplesDelay;
-            float fract = samplesDelay - apM;
-            if (fract < 0.1f)
-            {
-                fract += 1.0f; // delta range of [0.1, 1.1]
-                apM -= 1;
-            }
-            const float apN = (1.0f - fract) / (1.0f + fract);
+            assert (clampLength (samplesDelay) == samplesDelay);
             
-            const float a = array_[size_t ((writeIndex_ + apM) & mask_)];
+            int delayInt = (int)samplesDelay;
+            float delayFract = samplesDelay - delayInt;
             
-            const float b = apZ1_ * -apN + a;
-            const float output = b * apN + apZ1_;
-            apZ1_ = b;
-            return output;
+            const int lower = (writeIndex_ + delayInt) & mask_;
+            const int upper = (lower + 1) & mask_;
+            
+            return array_[(size_t)lower] + (array_[(size_t)upper] - array_[(size_t)lower]) * delayFract;
+        }
+        
+        inline float getClipped (float samplesDelay) const
+        {
+            return get (clampLength (samplesDelay));
+        }
+        
+        // ================================================================================
+        inline int getMinDelayLengthSamples() const
+        {
+            return 1;
+        }
+        
+        inline int getMaxDelayLengthSamples() const
+        {
+            return (int)array_.size();
+        }
+        
+        inline float clampLength (float samplesDelay) const
+        {
+            return std::clamp (samplesDelay, (float)getMinDelayLengthSamples(), (float)getMaxDelayLengthSamples());
         }
         
     private:
         std::vector <float> array_;
-        
         int mask_;
         int writeIndex_;
-        
-        float apZ1_ = 0.0f;
     };
 }

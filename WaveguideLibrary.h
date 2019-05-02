@@ -60,10 +60,11 @@
 #include "Source/jbaudio_LagrangeInterpolation.h"
 #include "Source/jbaudio_LogSmoother.h"
 #include "Source/jbaudio_Maths.h"
-#include "Source/jbaudio_MouthPiece.h"
 #include "Source/jbaudio_OnePoleZDF.h"
 #include "Source/jbaudio_OscSine.h"
-#include "Source/jbaudio_Tube.h"
 #include "Source/jbaudio_SmootherLin.h"
 #include "Source/jbaudio_SVF.h"
 #include "Source/jbaudio_WaveShaper.h"
+
+#include "Source/jbaudio_MouthPiece.h"
+#include "Source/jbaudio_Tube.h"

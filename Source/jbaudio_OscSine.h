@@ -80,6 +80,11 @@ namespace jbaudio
             return std::sinf (phase_) * volume_;
         }
         
+        inline float getWithoutTicking()
+        {
+            return std::sinf (phase_) * volume_;
+        }
+        
     private:
         float sampleRate_;
         float incr_;

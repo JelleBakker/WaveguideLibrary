@@ -71,7 +71,7 @@ namespace jbaudio
             // exciter
             float p = pressure_.tick();
             float a = tubeFeedback - p;
-            const float output = p + a * (0.7f - 0.3f * a);
+            const float output = p + a * (std::clamp (0.7f - 0.3f * a, -1.0f, 1.0f));
             return output;
         }
         

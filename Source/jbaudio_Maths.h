@@ -45,6 +45,7 @@ namespace jbaudio
 {
     static constexpr float pi = 3.14159265358979f;
     static constexpr float twoPi = pi * 2.0f;
+    static constexpr float min3dBAmp = 0.7079457844f;
     
     template <int N>
     struct ConstexprPow2f

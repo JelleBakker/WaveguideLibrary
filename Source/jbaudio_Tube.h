@@ -58,7 +58,6 @@ namespace jbaudio
             lowpass_.reset();
             length_.reset();
             cutoff_.reset();
-            lastOut_ = 0.0f;
         }
         
         void setSampleRate (float sr)
@@ -74,7 +73,12 @@ namespace jbaudio
             }
         }
         
-        inline float push (float input)
+        inline void push (float input)
+        {
+            delay_.push (input);
+        }
+        
+        inline float get()
         {
             float freq = jbaudio::pitchToFreq (length_.tick()); // de freq die je wilt horen
             float delayLen = sampleRate_ / freq; // de delay lengte voor die freq
@@ -86,15 +90,7 @@ namespace jbaudio
             float pipeOut = delay_.getClipped (delayLen);
             pipeOut = lowpass_.tickLP (pipeOut);
             pipeOut *= -0.95f;
-            
-            delay_.push (input);
-            
-            return lastOut_ = pipeOut;
-        }
-        
-        inline float getLastOut() const
-        {
-            return lastOut_;
+            return pipeOut;
         }
         
         inline void setLength (float pitch)
@@ -109,8 +105,6 @@ namespace jbaudio
         
     private:
         float sampleRate_;
-        
-        float lastOut_;
         
         jbaudio::DelayHermite delay_;
         

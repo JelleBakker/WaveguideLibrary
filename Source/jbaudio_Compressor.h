@@ -37,7 +37,7 @@
 
 #pragma once
 
-#include "jbaudio_EnvFollower.h"
+#include "Smoothers/jbaudio_EnvFollower.h"
 
 namespace jbaudio
 {

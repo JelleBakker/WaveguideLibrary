@@ -37,7 +37,7 @@
 
 #pragma once
 
-#include "jbaudio_Maths.h"
+#include "../jbaudio_Maths.h"
 #include <algorithm>
 
 namespace jbaudio

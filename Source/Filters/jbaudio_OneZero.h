@@ -30,29 +30,24 @@
 
 /*
  
- LogSmoother
+ OneZero
  Waveguide Library - JB Audio
  
  */
 
 #pragma once
+#include "jbaudio_OnePoleZDF.h"
 
-#include "../jbaudio_Maths.h"
-#include <algorithm>
-#include <cassert>
-
+// TODO
 namespace jbaudio
 {
-    // Based on Reaktor Env Follower
-    class EnvFollower
+    class OneZero
     {
     public:
-        EnvFollower()
+        OneZero()
         {
             setSampleRate (44100.0f);
-            setAttackTime (0.01f);
-            setReleaseTime (0.05f);
-            reset();
+            setFreq (22040.0f);
         }
         
         inline void reset()
@@ -60,46 +55,54 @@ namespace jbaudio
             z1_ = 0.0f;
         }
         
-        void setSampleRate (float sr)
+        inline void setSampleRate (float sr)
         {
-            assert (sr > 0);
             sampleRate_ = sr;
         }
         
-        inline void setAttackTime (float attackS)
+        inline void setFreq (float freq)
         {
-            attCoeff_ = time2Cutoff (attackS);
+            assert (false); // not working yet
+            assert (freq = clampFreq (freq));
+            b1_ = std::sinf (freq * twoPi / sampleRate_) * 0.5f;
+            b0_ = 1.0f - b1_;
         }
         
-        inline void setReleaseTime (float releaseS)
+        inline void setFreqClipped (float freq)
         {
-            relCoeff_ = time2Cutoff (releaseS);
+            setFreq (clampFreq (freq));
         }
         
-        inline float tick (float input)
+        inline float clampFreq (float freq) const
         {
-            return tickGrt0 (std::fabsf (input));
+            return std::clamp (freq, getMinFreq(), getMaxFreq());
         }
         
-        inline float tickGrt0 (float input)
+        // a one zero filter cannot have a cutoff freq smaller than samplerate / 4
+        inline float getMinFreq() const
         {
-            assert (input >= 0.0f);
-            float diff = input - z1_;
-            cancelDenormals (diff);
-            return z1_ = z1_ + diff * (input > z1_ ? attCoeff_ : relCoeff_);
+            return sampleRate_ * 0.25f;
+        }
+        
+        inline float getMaxFreq() const
+        {
+            return sampleRate_ * 0.5f;
+        }
+        
+        inline float tickLP (float input)
+        {
+            return 0.0f;
+        }
+        
+        inline float tickHP (float input)
+        {
+            return input - tickLP (input);
         }
         
     private:
         float sampleRate_;
-        
         float z1_;
-        
-        float attCoeff_;
-        float relCoeff_;
-        
-        inline float time2Cutoff (float seconds)
-        {
-            return 1.0f - std::exp2f (-1.0f / std::max (0.02f, sampleRate_ * seconds));
-        }
+        float b0_;
+        float b1_;
     };
 }

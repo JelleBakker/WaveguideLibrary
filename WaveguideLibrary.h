@@ -63,6 +63,7 @@
 #include "Source/Delays/jbaudio_HermiteInterpolation.h"
 #include "Source/Filters/jbaudio_DCBlock.h"
 #include "Source/Filters/jbaudio_OnePoleZDF.h"
+#include "Source/Filters/jbaudio_OneZero.h"
 #include "Source/Filters/jbaudio_SVF.h"
 #include "Source/Smoothers/jbaudio_EnvFollower.h"
 #include "Source/Smoothers/jbaudio_LogSmoother.h"

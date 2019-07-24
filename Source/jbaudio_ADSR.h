@@ -98,15 +98,14 @@ namespace jbaudio
             releaseMult_ = powXGrt0ToY (0.5f, 1.0f / (std::max (1.0f, seconds * sampleRate_)));
         }
         
-        inline void triggerGate (float velocity0to1)
+        inline void triggerGate (float velocity)
         {
-            assert (velocity0to1 >= 0.0f && velocity0to1 <= 1.0f);
-            if (velocity0to1 > 0.0f)
+            if (velocity > 0.0f)
             {
-                velocity_ = velocity0to1;
+                velocity_ = velocity;
                 sustainLevelScaled_ = sustainLevel_ * velocity_;
                 // start
-                if (value_ > velocity0to1)
+                if (value_ > velocity)
                     stage_ = Stage::Decay;
                 else
                     stage_ = Stage::Attack;

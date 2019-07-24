@@ -37,7 +37,7 @@
 
 #pragma once
 
-#include "jbaudio_Maths.h"
+#include "../jbaudio_Maths.h"
 #include <algorithm>
 #include <cmath>
 
@@ -59,7 +59,7 @@ namespace jbaudio
         inline void setSampleRate (float sr)
         {
             sampleRate_ = sr;
-            setFreq (freq_);
+            setFreqClipped (freq_);
         }
         
         inline void setFreq (float f)
@@ -67,6 +67,11 @@ namespace jbaudio
             freq_ = f;
             float a = bilinearTransform (f, sampleRate_);
             g_ = a / (1.0f + a);
+        }
+        
+        inline void setFreqClipped (float f)
+        {
+            setFreq (std::clamp (f, 0.0f, sampleRate_ * 0.49f));
         }
         
         inline float tickLP (float input)

@@ -30,105 +30,99 @@
 
 /*
  
- SmootherLin
+ TransitionXFade
  Waveguide Library - JB Audio
  
  */
 
 #pragma once
 
-#include "../jbaudio_Maths.h"
-#include <algorithm>
-#include <cassert>
-
+// Based on the method described in patent:
+// https://patentimages.storage.googleapis.com/49/7f/81/c134de24dd69b8/WO1998010355A1.pdf
 namespace jbaudio
 {
-    // based on juce LinearSmoothedValue
-    class SmootherLin
+    class TransitionXFade
     {
     public:
-        SmootherLin (float initialValue = 0.0f)
+        enum class State { Idle, FadingToB, FadingToA };
+        
+        TransitionXFade()
         {
             setSampleRate (44100.0f);
-            setTime (0.01f);
-            
-            setTargetForced (initialValue);
+            setTime (0.02f);
+            reset();
         }
         
         inline void reset()
         {
-            setTargetForced (target_);
+            nextTapNeedsFade_ = false;
+            if (state_ == State::FadingToB)
+                xfadeValue_ = 1.0f;
+            else if (state_ == State::FadingToA)
+                xfadeValue_ = 0.0f;
+            state_ = State::Idle;
+            assert (tapValue_ == 0.0f || tapValue_ == 1.0f);
         }
         
         void setSampleRate (float sr)
         {
-            assert (sr > 0);
             sampleRate_ = sr;
         }
         
         inline void setTime (float seconds)
         {
-            setNumSteps (int (seconds * sampleRate_));
+            assert (seconds > 0.0f;)
+            incr_ = 1.0f / (seconds * sampleRate_);
         }
         
-        inline void setNumSteps (int numSteps)
+        // this class doesn't care what unit this is, it can be samples, pitch whatever it needs to x-fade between
+        inline void gotoNextTapForced()
         {
-            assert (numSteps >= 1);
-            numSteps_ = numSteps;
-            numStepsInv_ = 1.0f / numSteps_;
+            nextTapNeedsFade_ = false;
+            setNextTap (target);
         }
         
-        inline void setTarget (float t)
+        inline void gotoNextTap()
         {
-            if (target_ != t)
+            if (nextTapNeedsFade_)
             {
-                target_ = t;
-                incr_ = (target_ - currentValue_) * numStepsInv_;
-                counter_ = numSteps_;
+                if (xfadeValue_ == 0.0f)
+                {
+                    assert (state_ == State::Idle);
+                    state_ == State::FadingToB;
+                }
+                else if (xfadeValue_ == 1.0f)
+                {
+                    assert (state_ == State::Idle);
+                    state_ == State::FadingToA;
+                }
+                else
+                {
+                    // not finished yet.. try again later :)
+                }
+            }
+            else
+            {
+                if (state_ != State::Idle)
+                {
+                    
+                }
             }
         }
         
-        inline void setTargetForced (float t)
+        inline void tick (float& tapAMultiplier, float& tapBMultiplier)
         {
-            currentValue_ = target_ = t;
-            counter_ = 0;
-        }
-        
-        inline float getTarget() const
-        {
-            return target_;
-        }
-        
-        inline float tick()
-        {
-            if (counter_ > 0)
-            {
-                currentValue_ += incr_;
-                counter_--;
-                return currentValue_;
-            }
-            else return target_;
-        }
-        
-        inline bool isSmoothing() const
-        {
-            return counter_ > 0;
-        }
-        
-        inline float getCurrentValue() const
-        {
-            return currentValue_;
+            
         }
         
     private:
         float sampleRate_;
         
-        float currentValue_;
-        float target_;
+        State state_;
         
-        int counter_;
-        int numSteps_;
-        float numStepsInv_;
+        bool nextTapNeedsFade_;
+        
         float incr_;
+        float xfadeValue_;
     };
 }

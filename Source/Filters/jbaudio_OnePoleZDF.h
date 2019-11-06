@@ -71,7 +71,7 @@ namespace jbaudio
         
         inline void setFreqClipped (float f)
         {
-            setFreq (std::clamp (f, 0.0f, sampleRate_ * 0.49f));
+            setFreq (clamp (f, 0.0f, sampleRate_ * 0.49f));
         }
         
         inline float tickLP (float input)

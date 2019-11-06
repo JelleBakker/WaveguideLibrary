@@ -60,7 +60,7 @@ namespace jbaudio
     };
     
     // Credits to Martijn Zwartjes
-    constexpr void cancelDenormals (float& f)
+    inline void cancelDenormals (float& f)
     {
         f += 1E-18;
     }
@@ -137,5 +137,12 @@ namespace jbaudio
     inline float bilinearTransform (float f, float sr)
     {
         return bilinearTransformOpt (f, pi / sr);
+    }
+    
+    template <typename T>
+    inline const T& clamp (const T& value, const T& min, const T& max)
+    {
+        assert (min <= max);
+        return value < min ? min : value > max ? max : value;
     }
 };

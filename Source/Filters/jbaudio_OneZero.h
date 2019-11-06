@@ -75,7 +75,7 @@ namespace jbaudio
         
         inline float clampFreq (float freq) const
         {
-            return std::clamp (freq, getMinFreq(), getMaxFreq());
+            return clamp (freq, getMinFreq(), getMaxFreq());
         }
         
         // a one zero filter cannot have a cutoff freq smaller than samplerate / 4

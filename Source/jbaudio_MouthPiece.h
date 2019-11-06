@@ -71,13 +71,13 @@ namespace jbaudio
             // exciter
             float p = pressure_.tick();
             float a = tubeFeedback - p;
-            const float output = p + a * (std::clamp (0.7f - 0.3f * a, -1.0f, 1.0f));
+            const float output = p + a * (clamp (0.7f - 0.3f * a, -1.0f, 1.0f));
             return output;
         }
         
         inline void setPressure (float p)
         {
-            pressure_.setTarget (shapePressure (std::clamp (p, 0.0f, 1.0f)));
+            pressure_.setTarget (shapePressure (clamp (p, 0.0f, 1.0f)));
         }
         
     private:

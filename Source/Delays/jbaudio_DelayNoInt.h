@@ -101,7 +101,7 @@ namespace jbaudio
         
         inline int clampLength (int samples) const
         {
-            return std::clamp (samples, getMinDelayLengthSamples(), getMaxDelayLengthSamples());
+            return clamp (samples, getMinDelayLengthSamples(), getMaxDelayLengthSamples());
         }
         
     private:

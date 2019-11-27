@@ -145,4 +145,12 @@ namespace jbaudio
         assert (min <= max);
         return value < min ? min : value > max ? max : value;
     }
+    
+    template <typename T>
+    inline T map (T input, T inputMin, T inputMax, T targetMin, T targetMax)
+    {
+        return targetMin + (targetMax - targetMin) * ((input - inputMin) / (inputMax - inputMin));
+    }
+    
+    
 };

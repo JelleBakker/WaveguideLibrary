@@ -51,6 +51,7 @@
 #include "Source/jbaudio_ADSR.h"
 #include "Source/jbaudio_Compressor.h"
 #include "Source/jbaudio_LagrangeInterpolation.h"
+#include "Source/jbaudio_LookupTable.h"
 #include "Source/jbaudio_Maths.h"
 #include "Source/jbaudio_MouthPiece.h"
 #include "Source/jbaudio_OscSine.h"

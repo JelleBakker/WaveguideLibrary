@@ -35,7 +35,7 @@
 
   ID:               WaveguideLibrary
   vendor:           jbaudio
-  version:          0.0.1
+  version:          0.0.2
   name:             Waveguide library
   description:      Physical modelling waveguide lubrary
   website:          http://www.jb-audio.com

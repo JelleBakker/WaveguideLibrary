@@ -78,7 +78,7 @@ namespace jbaudio
         inline float mapToTableClipped (float f, float min, float max)
         {
             assert (isValid());
-            return std::clamp (mapToTable (f, min, max), 0.0f, float (data_.size() - 1) - 0.0001f);
+            return clamp (mapToTable (f, min, max), 0.0f, float (data_.size() - 1) - 0.0001f);
         }
         
         inline float get (float index) const
